@@ -1,7 +1,11 @@
 import config
 import gavagai
+import newspaper
 
-if __name__ == '__main__':
+def gavagai_test():
+    print "# GAVAGAI (gavagai module):"
+    print
+
     api = gavagai.Gavagai(config.API_KEY)
     texts = [dict(body="I am angry, I hate you, blah blah, you're terrible.", id="angrytext"),
              dict(body="I am happy. Cats are cute, flowers smell good.", id="happytext"),
@@ -16,3 +20,21 @@ if __name__ == '__main__':
         for tone in resp['tonality']:
             print "* {} = {}".format(tone['tone'], tone['score'])
         print
+
+def newspaper_test():
+    print "# ARTICLE TEXT EXTRACTION (newspaper module):"
+    print
+
+    ARTICLE_URL = 'http://www.svd.se/nyheter/utrikes/tsipras-till-moskva_4466867.svd'
+    article = newspaper.Article(ARTICLE_URL, language='sv')
+    article.download()
+    article.parse()
+    print "Title:"
+    print "   " + article.title
+    print "Excerpt from the text:"
+    print "   " + article.text[:100] + " ..."
+
+
+if __name__ == '__main__':
+    gavagai_test()
+    newspaper_test()
