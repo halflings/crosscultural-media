@@ -16,9 +16,3 @@ class Gavagai(object):
     def tonality(self, texts, language):
         data = dict(language=language, texts=texts)
         return self._request('tonality', data)
-
-if __name__ == '__main__':
-    import config
-    api = Gavagai(config.API_KEY)
-    texts = [dict(body="angry text example, I hate you, blah blah.", id="randomtext")]
-    print api.tonality(texts, "en")
