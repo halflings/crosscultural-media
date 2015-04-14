@@ -32,7 +32,7 @@ a:hover, a:active, a:focus {
   width: 100%;
   padding: 10px;
 
-  background: #4e5d6d;
+  background: #31394B;
   color: #FFF;
   text-shadow: -1px 1px 0px rgba(0, 0, 0, 0.5);
 }
@@ -48,6 +48,7 @@ a:hover, a:active, a:focus {
 
 .header .sitename {
   font-size: 26px;
+  font-weight: lighter;
   margin: 4px 0 -3px 8px;
   display: inline-block;
 }
@@ -84,4 +85,10 @@ a:hover, a:active, a:focus {
   margin-top: 10px;
   /* Hidden by default*/
   display: none;
+}
+
+
+/* Index */
+.main-container {
+    margin-top: 20px;
 }
