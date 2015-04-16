@@ -1,6 +1,5 @@
 import feedparser
 import socket
-import urllib
 
 BASE_URL = 'https://news.google.com'
 
@@ -12,9 +11,8 @@ class GoogleNews(object):
         params = dict(q=query, output='rss', userip=self.userip)
         if language:
             params['ned'] = language
-        query_string = '{}?{}'.format(BASE_URL, urllib.urlencode(params))
+        encoded_params = '&'.join(u'{}={}'.format(key, value) for key, value in params.iteritems())
+        query_string = u'{}?{}'.format(BASE_URL, encoded_params)
+        print query_string
         feed = feedparser.parse(query_string)
         return feed.entries
-
-news_api = GoogleNews()
-results = news_api.news("kaffe", "sv")
