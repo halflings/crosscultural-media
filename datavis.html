@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cross-cultural media monitoring</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+  <script src="http://code.highcharts.com/highcharts-3d.js"></script>
+  <script src="http://code.highcharts.com/modules/heatmap.js"></script>
+</head>
+<body>
+  <center>
+    <h1>Data visualisation</h1>
+    <h2>There will be pretty charts to look at</h2>
+    <p>Something more</p>
+    <div id="PCAscatter" style="width:600px; height:600px;"></div>
+    <p>Maybe some more text</p>
+    <div id="heatmap" style="width:600px; height:400px;"></div>
+  </center>
+  <script>
+  $(function () {
+    $('#PCAscatter').highcharts({
+        chart: {
+            type: 'scatter',
+            options3d: {
+                enabled: true,
+                alpha: 0,
+                beta: 30,
+                depth: 200,
+                viewDistance: 10,
+                frame: {
+                    bottom: { size: 1, color: 'rgba(0,0,0,0.03)' },
+                    back: { size: 1, color: 'rgba(0,0,0,0.05)' },
+                    side: { size: 1, color: 'rgba(0,0,0,0.07)' }
+                }
+            }
+        },
+        title: {
+            text: 'Tonality clustering'
+        },
+        subtitle: {
+            text: 'Reduced to 3 dimensions through PCA'
+        },
+        series: [{
+            name: 'language1',
+            data: [
+                [-0.02184188, 0.07802916, -0.0502281],
+                [-0.0735915,   0.17923403, -0.06466295],
+                [-0.06054167,  0.15581292,  0.02158626],
+                [-0.1669916,   0.05333835, -0.16924289],
+                [-0.11062716,  0.21497696, -0.08922567]
+            ]
+        }, {
+            name: 'language2',
+            data: [
+                [-0.25018905, -0.16306214,  0.01349438],
+                [-0.33550167, -0.25217826,  0.00395051],
+                [-0.43192338, -0.23725357,  0.15857507],
+                [-0.27913722, -0.09053965,  0.08396773],
+                [-0.38558716, -0.19301422, -0.10686142]
+            ]
+        }, {
+            name: 'language3',
+            data: [
+                [ 0.23295381, -0.14352988, -0.05772517],
+                [ 0.28470343, -0.24473475, -0.04329032],
+                [ 0.34454053, -0.30916005,  0.06618061],
+                [ 0.43315138, -0.23820379,  0.16331468],
+                [ 0.3859144,  -0.20472002, -0.19046901]
+            ]
+        }, {
+            name: 'language4',
+            data: [
+                [ 0.07155822,  0.20392484,  0.05435185],
+                [ 0.14878336,  0.25626139, -0.03114036],
+                [ 0.0198086,   0.30512971,  0.039917  ],
+                [ 0.08939731,  0.23544315,  0.14804692],
+                [ 0.10512122,  0.39424583,  0.04946086]
+            ]
+        }]
+    });
+  });
+  </script>
+  <script>
+  $(function () {
+    $('#heatmap').highcharts({
+        chart: {
+            type: 'heatmap'
+        },
+        title: {
+            text: 'Mean tonality scores'
+        },
+        subtitle: {
+            text: 'Mean of tonality scores for different languages'
+        },
+        xAxis: {
+            categories: ['Score1', 'Score2', 'Score3', 'Score4', 'Score5', 'Score6']
+        },
+
+        yAxis: {
+            categories: ['Language1', 'Language2', 'Language3', 'Language4'],
+            title: null
+        },
+        colorAxis: {
+            reversed: false,
+            min: 0,
+            stops: [
+              [0.0, '#9999FF'],
+              [0.2, '#990099'],
+              [0.4, '#990066'],
+              [0.6, '#990033'],
+              [0.8, '#990000'],
+              [1.0, '#660000']
+            ]
+            //minColor: '#FFFFFF',
+            //maxColor: '#009900'
+        },
+        legend: {
+            align: 'right',
+            layout: 'vertical',
+            symbolHeight: 280
+        },
+        series: [{
+            name: 'Tonality scores',
+            borderWidth: 1,
+            data: [
+              [0, 0, 0.24], [0, 1, 0.08], [0, 2, 0.04], [0, 3, 0.32], [1, 0, 0.24], [1, 1, 0.10], [1, 2, 0.06], [1, 3, 0.10],
+              [2, 0, 0.04], [2, 1, 0.08], [2, 2, 0.42], [2, 3, 0.06], [3, 0, 0.06], [3, 1, 0.06], [3, 2, 0.32], [3, 3, 0.10],
+              [4, 0, 0.20], [4, 1, 0.10], [4, 2, 0.10], [4, 3, 0.36], [5, 0, 0.22], [5, 1, 0.58], [5, 2, 0.06], [5, 3, 0.06]
+            ], 
+            dataLabels: {
+                enabled: true,
+                color: '#000000'
+            }
+        }]
+      });
+  });
+  </script>
+</body>
+</html> 
