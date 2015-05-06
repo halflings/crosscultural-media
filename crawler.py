@@ -36,7 +36,7 @@ def fetch_articles(query):
     api = GoogleNews()
     entries = api.news(query.text, query.language)
     articles = []
-    for entry in entries[:2]:
+    for entry in entries:
         print u"    . Article '{}'".format(entry.title)
         nws_article = newspaper.Article(entry.link, language=query.language)
 
