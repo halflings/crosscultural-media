@@ -37,7 +37,7 @@ class Article(mongoengine.Document):
 
     @property
     def score_vector(self):
-        return [score.normalized_score for score in self.scores]
+        return [score.normalized_score for score in sorted(self.scores, key=lambda s : s.tone)]
 
 
 class Score(mongoengine.Document):
