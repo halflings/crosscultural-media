@@ -7,15 +7,15 @@ def gavagai_test():
     print
 
     api = gavagai.Gavagai(config.GAVAGAI_API_KEY)
-    texts = [dict(body="I am angry, I hate you, blah blah, you're terrible.", id="angrytext"),
-             dict(body="I am happy. Cats are cute, flowers smell good.", id="happytext"),
-             dict(body="Stockholm is Sweden's capital. It isn't close to Beijing.", id="neutraltext"),]
+    texts = ["I am angry, I hate you, blah blah, you're terrible.",
+             "I am happy. Cats are cute, flowers smell good.",
+             "Stockholm is Sweden's capital. It isn't close to Beijing."]
     response = api.tonality(texts, "en")
 
-    for text in texts:
-        print "{} : {}".format(text['id'], text['body'])
+    for text_id, text in enumerate(texts):
+        print text
         for resp in response['texts']:
-            if resp['id'] == text['id']:
+            if resp['id'] == str(text_id):
                 break
         for tone in sorted(resp['tonality'], key=lambda t : t['score'], reverse=True):
             print "* {} = {}".format(tone['tone'], tone['score'])
