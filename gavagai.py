@@ -11,7 +11,7 @@ class Gavagai(object):
 
     def _request(self, endpoint, payload):
         return requests.post('{}/{}'.format(BASE_URL, endpoint), headers=DEFAULT_HEADERS,
-                             json=payload, params=self._auth_params, verify=False).json()
+                             json=payload, params=self._auth_params).json()
 
     def tonality(self, texts, language):
         texts_data = [dict(body=text, id=str(i)) for i, text in enumerate(texts)]
