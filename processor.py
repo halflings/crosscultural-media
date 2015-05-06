@@ -71,5 +71,4 @@ def process_gavagai(query, articles):
 
 #Extract the important sentences from the given article
 def extract_sentences(article, query):
-    #return [article.text]
     return extractor.extract_surrounded_context(article.text, query)

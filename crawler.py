@@ -45,4 +45,5 @@ def fetch_articles(query, language):
     return articles
 
 if __name__ == '__main__':
-    print process_query("mariage", "fr")
+    #print process_query("mariage", "fr")
+    print process_query("food", "en")

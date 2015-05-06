@@ -10,7 +10,8 @@ class GoogleNews(object):
     def news(self, query, language=None):
         params = dict(q=query, output='rss', userip=self.userip)
         if language:
-            params['ned'] = language
+            #params['ned'] = language
+            params['hl'] = language #Using 'hl' seems to give the results in the target language
         encoded_params = '&'.join(u'{}={}'.format(key, value) for key, value in params.iteritems())
         query_string = u'{}?{}'.format(BASE_URL, encoded_params)
         print query_string
