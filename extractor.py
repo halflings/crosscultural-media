@@ -16,6 +16,7 @@ def extract_context(text,query):
             res.append(sent)
     return res
 
+
 # Finds all sentences containing the query. Returns a list where each element is a string. Apart from the sentence
 # containing the query, each element also contains the sentence before and after the sentence containing the query
 # (if applicable). This may lead to multiple elements being identical or almost identical.
