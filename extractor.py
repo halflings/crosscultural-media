@@ -3,43 +3,52 @@ import nltk
 # Tokenize the text of the article into sentences using the standard nltk sentence tokenization and returns as list
 # Input the text from an article
 def extract_sentences(text):
-    text_No_Newline = text.replace("\n","")
-    return nltk.sent_tokenize(text_No_Newline)
+    return [sent.replace("\n","") for sent in nltk.sent_tokenize(text)]
 
-# Finds all sentences containing the query and returns these sentences as elements in a list.
+# Finds all sentences containing any of the query words and returns these sentences as elements in a list.
 # Input the text from an article and the query word/words
 def extract_context(text,query):
     res = [];
     sentences = extract_sentences(text)
+    query_words = query.split(" ")
     for sent in sentences:
-        if query in sent:
+        if any(qw in sent for qw in query_words):
             res.append(sent)
     return res
 
-
-# Finds all sentences containing the query. Returns a list where each element is a string. Apart from the sentence
-# containing the query, each element also contains the sentence before and after the sentence containing the query
-# (if applicable). This may lead to multiple elements being identical or almost identical.
+# Finds all sentences containing any of the query words all well as all sentences preceding and following directly after
+# such sentences.
 # Input the text from an article and the query word/words
 def extract_surrounded_context(text,query):
     res = [];
     sentences = extract_sentences(text)
+    query_words = query.split(" ")
+    first = False
+    second = False
     ii = 0
     for sent in sentences:
-        tmp = []
-        if query in sent:
-            if ii > 0:
-                tmp.append(sentences[ii-1])
-                tmp.append(" ")
-            tmp.append(sent)
+        if any(qw in sent for qw in query_words):
+            if ii > 0 and not first:
+                res.append(sentences[ii-1])
+            if not second:
+                res.append(sent)
+                first = True
             if ii < (len(sentences)-1):
-                tmp.append(" ")
-                tmp.append(sentences[ii+1])
-        res.append("".join(tmp))
+                res.append(sentences[ii+1])
+                second = True
+        else:
+            if second:
+                first = True
+            else:
+                first = False
+            second = False
         ii += 1
     return res
 
-
+# Printing function for debugging
+# def print_text(sentences):
+#    for sent in sentences:
+#        print(sent)
 
 
 
