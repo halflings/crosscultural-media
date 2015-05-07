@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 
 import config
 import crawler
 import gavagai
 import processor
+from processor import Result, Sentence, Score, ResultEncoder
+import json
 
 # Initializing the web app
 app = Flask(__name__)
@@ -17,10 +19,14 @@ def index():
 @app.route('/search', methods=['GET'])
 def search():
     query = request.args.get('query') or ''
-    for result in processor.process(query):
+    results = processor.process(query)
+    for result in results:
         print result.title
-        for score in result.scores:
-            print "\t{}: score: {}, normalized score: {}".format(score.tone, score.score, score.normalizedScore)
+        for sentence in result.sentences:
+            print "sentence #{}".format(sentence.num)
+            for score in sentence.scores:
+                print "\t{}: score: {}, normalized score: {}".format(score.tone, score.score, score.normalizedScore)
+    #return json.dumps(results, cls=ResultEncoder, sort_keys=True, indent=4, separators=(',', ': '))
     return ''
 
 if __name__ == '__main__':
