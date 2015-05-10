@@ -9,22 +9,23 @@ from model import QueryJob
 
 # Initializing the web app
 app = Flask(__name__)
+mongoengine.connect(config.db_name)
 
 # Views
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', queries = QueryJob.objects(language='en', processed=True))
+
+# Returns the processed jobs for the given query
+def get_processed_jobs(query, language):
+	return QueryJob.objects(text=query, language=language, processed=True)
 
 # Actions
 @app.route('/search', methods=['GET'])
 def search():
 	query = request.args.get('query') or ''
-	#resEnglish = dict(query='coffee', language='en', results=[[-0.61748019,  0.10154602], [-0.61748019,  0.10154602], [ 0.51323593, -0.03923523], [ 0.60949273,  0.14345396], [-0.61748019,  0.10154602], [-0.47234277, -0.00079441], [-0.61748019,  0.10154602], [ 0.2137013, -0.44803087], [ 0.76519622,  0.38417246], [ 0.76519622,  0.38417246]])
-	#resSwedish = dict(query='kaffe', language='sv', results=[[ 0.1815497,  -0.21035415], [ 0.3043041,   0.28996368], [-0.61748019,  0.10154602], [ 0.13368673, -0.00892597], [ 0.6372332,   0.16000524], [ 0.2137013,  -0.44803087], [-0.61748019,  0.10154602], [ 0.2137013,  -0.44803087], [ 0.2137013,  -0.44803087], [-0.58747614,  0.08038933]])
-	#return json.dumps(dict(query='coffee', results=[resEnglish, resSwedish]))
-	lang = "en"
-	mongoengine.connect(config.db_name)
-	jobs = QueryJob.objects(text=query, language=lang, processed=True)
+	lang = 'en'
+	jobs = get_processed_jobs(query, lang)
 	query_job = None
 
 	# Check if any jobs exists
@@ -32,7 +33,7 @@ def search():
 		# Else process it
 		enqueue_query(query, lang)
 		processing_routine()
-		query_job = QueryJob.objects(text=query, language=lang, processed=True)[0]
+		query_job = get_processed_jobs(query, lang)[0]
 	else:
 		query_job = jobs[0]
 

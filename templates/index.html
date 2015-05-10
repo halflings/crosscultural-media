@@ -11,5 +11,20 @@
 	        </span>
 	    </div>
     </form>
+
+    <h3>Queries</h3>
+    <ul>
+    	{% for query in queries %}
+    		<li><a href="javascript:searchQuery('{{ query.text }}')">{{ query.text }}</a></li>
+    	{% endfor %}
+    </ul>
 </div>
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript">
+		function searchQuery(query) {
+			document.location = "/results?query=" + encodeURIComponent(query);
+		}
+	</script>
 {% endblock %}
