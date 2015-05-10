@@ -33,6 +33,7 @@ def fetch_articles(query):
     api = GoogleNews()
     entries = api.news(query.text, query.language)
     articles = []
+    print u"'{}' in '{}'".format(query.text, query.language)
     for entry in entries:
         print u"    . Article '{}'".format(entry.title)
         nws_article = newspaper.Article(entry.link, language=query.language)
@@ -52,7 +53,7 @@ def fetch_scores(article):
     resp = gavagai.tonality([article.text], article.query.language)
     article.build_scores(resp)
 
-def queue_query(query, original_language):
+def enqueue_query(query, original_language):
     return QueryJob(text=query, language=original_language).save()
 
 def process_query(query_job):
@@ -81,7 +82,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         query = sys.argv[1]
 
-    queue_query(query, "en")
+    enqueue_query(query, "en")
     processing_routine()
 
     # while True:

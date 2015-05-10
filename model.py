@@ -1,10 +1,14 @@
 import mongoengine
-
+import numpy as np
 
 class QueryJob(mongoengine.Document):
     text = mongoengine.StringField(required=True)
     language = mongoengine.StringField(required=True)
     processed = mongoengine.BooleanField(default=False)
+
+    @property
+    def queries(self):
+        return Query.objects(source=self)
 
     def __str__(self):
         return u"<'{}' in '{}'>".format(self.text, self.language)
@@ -37,8 +41,11 @@ class Article(mongoengine.Document):
 
     @property
     def score_vector(self):
-        return [score.normalized_score for score in sorted(self.scores, key=lambda s : s.tone)]
+        return np.array([score.normalized_score for score in sorted(self.scores, key=lambda s : s.tone)])
 
+    @property
+    def sorted_tones(self):
+        return [score.tone for score in sorted(self.scores, key=lambda s : s.tone)]
 
 class Score(mongoengine.Document):
     tone = mongoengine.StringField(required=True)
