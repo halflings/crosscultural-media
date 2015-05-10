@@ -1,6 +1,3 @@
-import time
-
-import extractor
 import goslate
 import mongoengine
 import newspaper
@@ -56,7 +53,7 @@ def fetch_scores(article):
     article.build_scores(resp)
 
 def queue_query(query, original_language):
-    QueryJob(text=query, language=original_language).save()
+    return QueryJob(text=query, language=original_language).save()
 
 def process_query(query_job):
     queries = fetch_translations(query_job)
@@ -77,8 +74,8 @@ def processing_routine():
 
 if __name__ == '__main__':
     import sys
-    db = mongoengine.connect('testdb')
-    # db.drop_database('testdb')
+    db = mongoengine.connect(config.db_name)
+    # db.drop_database(config.db_name)
 
     query = "death"
     if len(sys.argv) > 1:
