@@ -13,7 +13,7 @@ class GoogleNews(object):
         self.userip = userip or socket.gethostbyname(socket.gethostname())
 
     def news(self, query, language=None):
-        params = dict(q=query, output='rss', userip=self.userip)
+        params = dict(q=unicode(query).encode('utf-8'), output='rss', userip=self.userip)
         if language:
             # params['ned'] = language
             params['hl'] = language # Using 'hl' seems to give the results in the target language
