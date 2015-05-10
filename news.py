@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import urllib
+
 import feedparser
 import socket
 
@@ -10,10 +15,8 @@ class GoogleNews(object):
     def news(self, query, language=None):
         params = dict(q=query, output='rss', userip=self.userip)
         if language:
-            #params['ned'] = language
-            params['hl'] = language #Using 'hl' seems to give the results in the target language
-        encoded_params = '&'.join(u'{}={}'.format(key, value) for key, value in params.iteritems())
-        query_string = u'{}?{}'.format(BASE_URL, encoded_params)
-        print query_string
+            # params['ned'] = language
+            params['hl'] = language # Using 'hl' seems to give the results in the target language
+        query_string = u'{}?{}'.format(BASE_URL, urllib.urlencode(params))
         feed = feedparser.parse(query_string)
         return feed.entries
