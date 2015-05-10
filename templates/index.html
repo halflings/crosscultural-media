@@ -3,11 +3,13 @@
 
 {% block body %}
 <div class="main-container">
-    <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search terms in English">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="button">Search</button>
-        </span>
-    </div>
+	<form method="get" action="/results">
+	    <div class="input-group">
+	        <input type="text" class="form-control" placeholder="Search terms in English" name="query">
+	        <span class="input-group-btn">
+	          <button class="btn btn-default" type="submit">Search</button>
+	        </span>
+	    </div>
+    </form>
 </div>
 {% endblock %}

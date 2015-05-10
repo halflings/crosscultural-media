@@ -2,6 +2,7 @@
 
 {% block body %}
 <div class="main-container">
+	<h2 id="queryName">Query: </h2>
 	<div id="PCAscatter" style="width:600px; height:600px;"></div>
 </div>
 {% endblock %}
@@ -14,37 +15,46 @@
 	<script type="text/javascript">
 	  	$(function () {
 	  		$.ajax({
-	  			url: "/search?query=death",
+	  			url: "/search?query={{ query }}",
 	  			dataType: "json"
 	  		}).done(function(data) {
-	  			var series = data.map(function(result) {
+	  			$("#queryName").text("Query: '" + data.query + "'");
+	  			var series = data.results.map(function(result) {
 	  				return {
-	  					name: result.language,
+	  					name: result.query + ", "+ result.language,
 	  					data: result.results
 	  				}
 	  			});
 
 	  			$('#PCAscatter').highcharts({
 			        chart: {
-			            type: 'scatter',
-			            options3d: {
-			                enabled: true,
-			                alpha: 0,
-			                beta: 30,
-			                depth: 200,
-			                viewDistance: 10,
-			                frame: {
-			                    bottom: { size: 1, color: 'rgba(0,0,0,0.03)' },
-			                    back: { size: 1, color: 'rgba(0,0,0,0.05)' },
-			                    side: { size: 1, color: 'rgba(0,0,0,0.07)' }
-			                }
+			            type: 'scatter'
+			        },
+		        	legend: {
+			            layout: 'vertical',
+			            align: 'left',
+			            verticalAlign: 'top',
+			            x: 100,
+			            y: 70,
+			            floating: true,
+			            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+			            borderWidth: 1
+			        },
+			        xAxis: {
+			            title: {
+			                enabled: false
+			            },
+			        },
+			        yAxis: {
+			            title: {
+			                enabled: false
 			            }
 			        },
 			        title: {
 			            text: 'Tonality clustering'
 			        },
 			        subtitle: {
-			            text: 'Reduced to 3 dimensions through PCA'
+			            text: 'Reduced to 2 dimensions through PCA'
 			        },
 			        series: series
 			    });
