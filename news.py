@@ -20,3 +20,8 @@ class GoogleNews(object):
         query_string = u'{}?{}'.format(BASE_URL, urllib.urlencode(params))
         feed = feedparser.parse(query_string)
         return feed.entries
+
+if __name__ == '__main__':
+    api = GoogleNews()
+    for result in api.news('coffee'):
+        print result 

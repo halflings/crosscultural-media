@@ -4,6 +4,11 @@ import socket
 
 BASE_URL = 'https://ajax.googleapis.com/ajax/services/search/news'
 
+class LinkEntry(object):
+    def __init__(self, title, link):
+        self.title = title
+        self.link = link
+
 class GoogleNewsAPI(object):
     def __init__(self, userip=None):
         self.userip = userip or socket.gethostbyname(socket.gethostname())
@@ -20,7 +25,7 @@ class GoogleNewsAPI(object):
             results = []
 
             for result in jsonResult["responseData"]["results"]:
-                results.append(result["unescapedUrl"]) 
+                results.append(LinkEntry(title=result["title"], link=result["unescapedUrl"]))
 
             return results
         else:
