@@ -20,6 +20,24 @@ def index():
 def get_processed_jobs(query, language):
 	return QueryJob.objects(text=query, language=language, processed=True)
 
+# Computes the mean for the given job
+def compute_mean(job):
+	results = []
+
+	for query in job.queries:
+		score_total = {}
+
+		for article in query.articles:
+			for score in article.scores:
+				if not (score.tone in score_total):
+					score_total[score.tone] = 0
+				score_total[score.tone] += score.normalized_score / len(query.articles)
+				
+		results.append(dict(query=query.text, language=query.language, results=score_total))
+
+	return results
+
+
 # Actions
 @app.route('/search', methods=['GET'])
 def search():
@@ -37,7 +55,7 @@ def search():
 	else:
 		query_job = jobs[0]
 
-	return json.dumps(dict(query=query, results=pca_transformer.project(query_job)))
+	return json.dumps(dict(query=query, pca_results=pca_transformer.project(query_job), mean_results=compute_mean(query_job)))
 
 @app.route('/results', methods=['GET'])
 def result():

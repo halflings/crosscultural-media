@@ -6,6 +6,7 @@ import config
 from gavagai import Gavagai
 from model import Article, Query, QueryJob
 from news import GoogleNews
+from news2 import GoogleNewsAPI
 
 
 def fetch_translations(query_job):
@@ -30,12 +31,15 @@ def fetch_translations(query_job):
 
 
 def fetch_articles(query):
-    api = GoogleNews()
-    entries = api.news(query.text, query.language)
+    # api = GoogleNews()
+    # entries = api.news(query.text, query.language)
+    api = GoogleNewsAPI()
+    entries = api.news(query.text, query.language, 20)
+
     articles = []
     print u"'{}' in '{}'".format(query.text, query.language)
     for entry in entries:
-        print u"    . Article '{}'".format(entry.title)
+        #print u"    . Article '{}'".format(entry.title)
         nws_article = newspaper.Article(entry.link, language=query.language)
 
         nws_article.download()

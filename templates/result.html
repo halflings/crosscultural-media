@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block body %}
 <div class="main-container">
-	<h2 id="queryName">Query: </h2>
-	<div id="PCAscatter" style="width:600px; height:600px;"></div>
+	<h2 id="queryName">Query: {{ query }}</h2>
+	<div id="pcaScatter" style="width:600px; height:600px;"></div>
+	<div id="meanHeatmap" style="width:600px; height:400px;"></div>
 </div>
 {% endblock %}
 
@@ -13,52 +14,129 @@
 	<script src="http://code.highcharts.com/modules/heatmap.js"></script>
 
 	<script type="text/javascript">
+		function addPcaPlot(data) {
+			var pcaSeries = data.map(function(result) {
+  				return {
+  					name: result.query + ", " + result.language,
+  					data: result.results
+  				}
+  			});
+
+  			$("#pcaScatter").highcharts({
+		        chart: {
+		            type: "scatter"
+		        },
+	        	legend: {
+		            layout: "vertical",
+		            align: "left",
+		            verticalAlign: "top",
+		            x: 100,
+		            y: 70,
+		            floating: true,
+		            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || "#FFFFFF",
+		            borderWidth: 1
+		        },
+		        xAxis: {
+		            title: {
+		                enabled: false
+		            },
+		        },
+		        yAxis: {
+		            title: {
+		                enabled: false
+		            }
+		        },
+		        title: {
+		            text: "Tonality clustering"
+		        },
+		        subtitle: {
+		            text: "Reduced to 2 dimensions through PCA"
+		        },
+		        series: pcaSeries
+		    });
+		}
+
+		function addMeanPlot(data) {
+			var languages = data.map(function(result) {
+				return result.language;
+			});
+
+			var scoreLabels = [];
+
+			for (var key in data[0].results) {
+				scoreLabels.push(key);
+			}
+
+			var plotData = [];
+			
+			for (var row in data) {
+				var result = data[row];
+				var col = 0;
+				for (var tone in result.results) {
+					var value = result.results[tone];
+					plotData.push([col, parseInt(row), +value.toFixed(4)]);
+					col++;
+				}
+			}
+
+			$("#meanHeatmap").highcharts({
+		    	chart: {
+		            type: "heatmap"
+		        },
+				title: {
+		            text: 'Mean tonality scores'
+		        },
+		        subtitle: {
+		            text: 'Mean of tonality scores for different languages'
+		        },
+		        xAxis: {
+		            categories: scoreLabels
+		        },
+
+		        yAxis: {
+		            categories: languages,
+		            title: null
+		        },
+		        colorAxis: {
+		            reversed: false,
+		            min: 0,
+		            stops: [
+		              [0.0, '#9999FF'],
+		              [0.2, '#990099'],
+		              [0.4, '#990066'],
+		              [0.6, '#990033'],
+		              [0.8, '#990000'],
+		              [1.0, '#660000']
+		            ]
+		        },
+		        legend: {
+		            align: 'right',
+		            layout: 'vertical',
+		            symbolHeight: 280
+		        },
+		        series: [{
+		            name: 'Tonality scores',
+		            borderWidth: 1,
+		            data: plotData,
+		            dataLabels: {
+		                enabled: true,
+		                color: '#000000'
+		            }
+		        }],
+		    });
+		}
+
 	  	$(function () {
 	  		$.ajax({
 	  			url: "/search?query={{ query }}",
 	  			dataType: "json"
 	  		}).done(function(data) {
-	  			$("#queryName").text("Query: '" + data.query + "'");
-	  			var series = data.results.map(function(result) {
-	  				return {
-	  					name: result.query + ", "+ result.language,
-	  					data: result.results
-	  				}
-	  			});
+	  			// Add the PCA plot
+	  			addPcaPlot(data.pca_results);
 
-	  			$('#PCAscatter').highcharts({
-			        chart: {
-			            type: 'scatter'
-			        },
-		        	legend: {
-			            layout: 'vertical',
-			            align: 'left',
-			            verticalAlign: 'top',
-			            x: 100,
-			            y: 70,
-			            floating: true,
-			            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
-			            borderWidth: 1
-			        },
-			        xAxis: {
-			            title: {
-			                enabled: false
-			            },
-			        },
-			        yAxis: {
-			            title: {
-			                enabled: false
-			            }
-			        },
-			        title: {
-			            text: 'Tonality clustering'
-			        },
-			        subtitle: {
-			            text: 'Reduced to 2 dimensions through PCA'
-			        },
-			        series: series
-			    });
-	  		});
+			    // Add the mean plot
+			    addMeanPlot(data.mean_results);
+			});
 	  });
 	</script>
 {% endblock %}
