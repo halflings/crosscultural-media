@@ -34,22 +34,26 @@ def fetch_articles(query):
     # api = GoogleNews()
     # entries = api.news(query.text, query.language)
     api = GoogleNewsAPI()
-    entries = api.news(query.text, query.language, 20)
+    entries = api.news(query.text, query.language, 50)
 
     articles = []
     print u"'{}' in '{}'".format(query.text, query.language)
     for entry in entries:
-        #print u"    . Article '{}'".format(entry.title)
-        nws_article = newspaper.Article(entry.link, language=query.language)
+        #We might get an article parse error, so skip this article!
+        try:
+            #print u"    . Article '{}'".format(entry.title)
+            nws_article = newspaper.Article(entry.link, language=query.language)
 
-        nws_article.download()
-        nws_article.parse()
-        nws_article.nlp()
+            nws_article.download()
+            nws_article.parse()
+            nws_article.nlp()
 
-        summary = nws_article.summary # '. '.join(extractor.extract_surrounded_context(nws_article.text, query.text))
-        article = Article(
-            title=nws_article.title, text=summary, query=query).save()
-        articles.append(article)
+            summary = nws_article.summary # '. '.join(extractor.extract_surrounded_context(nws_article.text, query.text))
+            article = Article(
+                title=nws_article.title, text=summary, query=query).save()
+            articles.append(article)
+        except:
+            pass
     return articles
 
 def fetch_scores(article):
