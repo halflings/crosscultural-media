@@ -9,6 +9,9 @@ class LinkEntry(object):
         self.title = title
         self.link = link
 
+    def __str__(self):
+        return self.link
+
 class GoogleNewsAPI(object):
     def __init__(self, userip=None):
         self.userip = userip or socket.gethostbyname(socket.gethostname())
@@ -23,13 +26,17 @@ class GoogleNewsAPI(object):
         # Check the result (we might get out of range)
         if jsonResult["responseStatus"] == 200:
             results = []
+            new_start = start
 
             for result in jsonResult["responseData"]["results"]:
-                results.append(LinkEntry(title=result["title"], link=result["unescapedUrl"]))
+                #Only add result in the target language
+                if result["language"] == language:
+                    results.append(LinkEntry(title=result["title"], link=result["unescapedUrl"]))
+                new_start += 1
 
-            return results
+            return (results, new_start)
         else:
-            return []
+            return ([], start)
 
     # Fetches news articles
     def news(self, query, max_results, language=None):
@@ -37,7 +44,7 @@ class GoogleNewsAPI(object):
         start = 0
 
         while True:
-            temp_res = self.fetch_news_at(query, start, language)
+            (temp_res, start) = self.fetch_news_at(query, start, language)
 
             # If we got back zero results, we have reached the end
             if len(temp_res) == 0:
@@ -47,8 +54,6 @@ class GoogleNewsAPI(object):
             for res in temp_res:
                 results.append(res)
 
-            start += len(temp_res)
-
             if len(results) >= max_results:
                 break
 
@@ -56,5 +61,6 @@ class GoogleNewsAPI(object):
 
 if __name__ == '__main__':
     api = GoogleNewsAPI()
-    for result in api.news('coffee', 15):
+    results = api.news('olja', 50, 'sv')
+    for result in results:
         print result 

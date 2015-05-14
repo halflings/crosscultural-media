@@ -5,7 +5,6 @@ import newspaper
 import config
 from gavagai import Gavagai
 from model import Article, Query, QueryJob
-from news import GoogleNews
 from news2 import GoogleNewsAPI
 
 
@@ -34,7 +33,7 @@ def fetch_articles(query):
     # api = GoogleNews()
     # entries = api.news(query.text, query.language)
     api = GoogleNewsAPI()
-    entries = api.news(query.text, query.language, 50)
+    entries = api.news(query.text, 50, query.language)
 
     articles = []
     print u"'{}' in '{}'".format(query.text, query.language)
@@ -90,8 +89,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         query = sys.argv[1]
 
-    enqueue_query(query, "en")
-    processing_routine()
+    query_job = enqueue_query(query, "en")
+    process_query(query_job)
 
     # while True:
     #     processing_routine()
