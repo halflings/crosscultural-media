@@ -10,8 +10,9 @@ def extract_sentences(text):
 def extract_context(text,query):
     res = [];
     sentences = extract_sentences(text)
-    query_words = query.split(" ")
+    query_words = query.lower().split(" ")
     for sent in sentences:
+        sent = sent.lower()
         if any(qw in sent for qw in query_words):
             res.append(sent)
     return res
@@ -22,11 +23,12 @@ def extract_context(text,query):
 def extract_surrounded_context(text,query):
     res = [];
     sentences = extract_sentences(text)
-    query_words = query.split(" ")
+    query_words = query.lower().split(" ")
     first = False
     second = False
     ii = 0
     for sent in sentences:
+        sent = sent.lower()
         if any(qw in sent for qw in query_words):
             if ii > 0 and not first:
                 res.append(sentences[ii-1])
