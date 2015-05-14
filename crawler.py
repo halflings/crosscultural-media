@@ -33,7 +33,7 @@ def fetch_articles(query):
     # api = GoogleNews()
     # entries = api.news(query.text, query.language)
     api = GoogleNewsAPI()
-    entries = api.news(query.text, query.language, 50)
+    entries = api.news(query.text, 50, query.language)
 
     articles = []
     print u"'{}' in '{}'".format(query.text, query.language)
