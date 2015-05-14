@@ -7,6 +7,8 @@ import sklearn.decomposition
 import config
 from crawler import enqueue_query, process_query
 
+import sys
+
 # Converts the 'array' type returned from pca.transform to a Python array
 def toArray(projection):
     data = []
@@ -28,6 +30,8 @@ def project(query_job):
         datapoints = [a.score_vector for a in query.articles]
         total_datapoints += datapoints
         datapoints_by_language[query.language] = datapoints
+
+    print >> sys.stderr,len(total_datapoints)
 
     # Fitting the PCA
     pca.fit(total_datapoints)

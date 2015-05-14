@@ -7,6 +7,10 @@ from gavagai import Gavagai
 from model import Article, Query, QueryJob
 from news2 import GoogleNewsAPI
 
+import lxml
+import sys
+import traceback
+import extractor
 
 def fetch_translations(query_job):
     if query_job.language not in config.SUPPORTED_LANGUAGES:
@@ -47,12 +51,21 @@ def fetch_articles(query):
             nws_article.parse()
             nws_article.nlp()
 
-            summary = nws_article.summary # '. '.join(extractor.extract_surrounded_context(nws_article.text, query.text))
+            #summary = nws_article.summary # 
+            summary='. '.join(extractor.extract_surrounded_context(nws_article.text, query.text))
+            summary=summary+" "+nws_article.title
             article = Article(
                 title=nws_article.title, text=summary, query=query).save()
             articles.append(article)
-        except:
+        except (lxml.etree.XMLSyntaxError, newspaper.ArticleException) as e:
+            print (traceback.format_exc())
             pass
+        except:
+            print (traceback.format_exc())
+            exit(1)
+
+
+
     return articles
 
 def fetch_scores(article):
