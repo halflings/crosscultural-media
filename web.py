@@ -26,12 +26,13 @@ def compute_mean(job):
 
 	for query in job.queries:
 		score_total = {}
+		num_articles = len(query.articles)
 
 		for article in query.articles:
 			for score in article.scores:
 				if not (score.tone in score_total):
 					score_total[score.tone] = 0
-				score_total[score.tone] += score.normalized_score / len(query.articles)
+				score_total[score.tone] += score.normalized_score / num_articles
 				
 		results.append(dict(query=query.text, language=query.language, results=score_total))
 
