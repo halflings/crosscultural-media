@@ -13,7 +13,7 @@
     </form>
 
     <h3>Queries</h3>
-    <ul>
+    <ul class="queries">
     	{% for query in queries %}
     		<li><a href="javascript:searchQuery('{{ query.text }}')">{{ query.text }}</a></li>
     	{% endfor %}
