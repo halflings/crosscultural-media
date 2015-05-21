@@ -57,9 +57,8 @@ def fetch_articles(query):
             article = Article(
                 title=nws_article.title, text=summary, query=query).save()
             articles.append(article)
-        except (lxml.etree.XMLSyntaxError, newspaper.ArticleException) as e:
+        except (lxml.etree.XMLSyntaxError, newspaper.ArticleException, TypeError):
             print (traceback.format_exc())
-            pass
         except:
             print (traceback.format_exc())
             exit(1)
