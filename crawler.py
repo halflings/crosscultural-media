@@ -44,7 +44,7 @@ def fetch_articles(query):
     for entry in entries:
         #We might get an article parse error, so skip this article!
         try:
-            #print u"    . Article '{}'".format(entry.title)
+            print u"    . Article '{}'".format(entry.title)
             nws_article = newspaper.Article(entry.link, language=query.language)
 
             nws_article.download()
